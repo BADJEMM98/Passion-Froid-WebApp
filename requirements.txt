@@ -1,0 +1,9 @@
+azure-common
+azure-mgmt-sql
+azure-mgmt-rdbms
+azure-mgmt-resource
+azure-mgmt-compute
+pyodbc
+msrestazure
+mysql-connector-python
+pymysql
