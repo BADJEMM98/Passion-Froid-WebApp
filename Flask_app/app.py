@@ -5,19 +5,18 @@ import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
-from api.utils import AZURE_STORAGE_CONNECTION_STRING, connect_to_azure, allowed_file,analysis_image,save_image_in_container
+from api.utils import AZURE_STORAGE_CONNECTION_STRING, connect_to_azure, allowed_file,analysis_image,save_image_in_container,save_image_in_mysql
 
 #load_dotenv('./.flaskenv')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.makedirs('uploads') if not os.path.exists('uploads') else os.path.abspath('uploads')
+app.config['DOWNLOAD_FOLDER'] = os.makedirs('downloads') if not os.path.exists('downloads') else os.path.abspath('downloads')
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-MY_CONNECTION_STRING = "REPLACE_THIS"
-MY_IMAGE_CONTAINER = "myimages"
 #cors = CORS(app, resources={r"/": {"origins": "*"}})
 
 
@@ -44,11 +43,12 @@ def uploadFile():
         print(filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #analysis image
-        image_analysis = analysis_image(filename)
-        tags_image_saved= save_image_in_container(filename)
-        #saved__in_mysql = save_tags_mysql()
+        tags_image_saved= analysis_image(filename)
+        url_image_saved = save_image_in_container(filename)
+        print(save_image_in_mysql(tags_image_saved, url_image_saved,filename))
+
         #save_image_in_blob_and_tags_in_db
-        resp = jsonify({'message' : 'File successfully uploaded and analysis', "data": image_analysis})
+        resp = jsonify({'message' : 'File successfully uploaded and analysis', "data": tags_image_saved})
         resp.status_code = 201
         return resp
     else:
