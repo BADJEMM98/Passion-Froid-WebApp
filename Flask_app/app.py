@@ -5,9 +5,13 @@ load_dotenv('./.flaskenv')
 
 app = Flask(__name__)
 
+@app.route('/alim', methods=['GET'])
+def insertion():
+    return render_template('alimentation.html')
+
 
 @app.route('/', methods=['GET'])
-def hello_world():
+def search():
     return render_template('index.html')
 
 
