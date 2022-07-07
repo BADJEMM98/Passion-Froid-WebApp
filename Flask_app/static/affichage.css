@@ -1,0 +1,240 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    color: grey;
+}
+#sidebar{
+    width: 20%;
+    padding: 10px;
+    margin: 0;
+    float: left;
+}
+#products{
+    width: 80%;
+    padding: 10px;
+    margin: 0;
+    float: right;
+}
+ul{
+    list-style: none;
+    padding: 5px;
+}
+li a{
+    color: darkgray;
+    text-decoration: none;
+}
+li a:hover{
+    text-decoration: none;
+    color: darksalmon;
+}
+.fa-circle{
+    font-size: 20px;
+}
+#red{
+    color: #e94545d7;
+}
+#teal{
+    color: rgb(69, 129, 129);
+}
+#blue{
+    color: #0000ff;
+}
+.card{
+    width: 250px;
+    display: inline-block;
+    height: 300px;
+}
+.card-img-top{
+    width: 250px;
+    height: 210px;
+}
+.card-body p{
+    margin: 2px;
+}
+.card-body{
+    padding: 0;
+    padding-left: 2px;
+}
+.filter{
+    display: none;
+    padding: 0;
+    margin: 0;
+}
+
+@media(min-width:991px){
+    .navbar-nav{
+        margin-left: 35%;
+    }
+    .nav-item{
+        padding-left: 20px;
+    }
+    .card{
+        width: 190px;
+        display: inline-block;
+        height: 300px;
+    }
+    .card-img-top{
+        width: 188px;
+        height: 210px;
+    }
+    #mobile-filter{
+        display: none;
+    }
+}
+@media(min-width:768px) and (max-width:991px){
+    .navbar-nav{
+        margin-left: 20%;
+    }
+    .nav-item{
+        padding-left: 10px;
+    }
+    .card{
+        width: 230px;
+        display: inline-block;
+        height: 300px;
+        margin-bottom: 10px;
+    }
+    .card-img-top{
+        width: 230px;
+        height: 210px;
+    }
+    #mobile-filter{
+        display: none;
+    }
+}
+@media(min-width:568px) and (max-width:767px){
+    .navbar-nav{
+        margin-left: 20%;
+    }
+    .nav-item{
+        padding-left: 10px;
+    }
+    .card{
+        width: 205px;
+        display: inline-block;
+        height: 300px;
+        margin-bottom: 10px;
+    }
+    .card-img-top{
+        width: 203px;
+        height: 210px;
+    }
+    .fa-circle{
+        font-size: 15px;
+    }
+    #mobile-filter{
+        display: none;
+    }
+}
+@media(max-width:567px){
+    .navbar-nav{
+        margin-left: 0%;
+    }
+    .nav-item{
+        padding-left: 10px;
+    }
+    #sidebar{
+        width: 100%;
+        padding: 10px;
+        margin: 0;
+        float: left;
+    }
+    #products{
+        width: 100%;
+        padding: 5px;
+        margin: 0;
+        float: right;
+    }
+    .card{
+        width: 230px;
+        display: inline-block;
+        height: 300px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+    .card-img-top{
+        width: 230px;
+        height: 210px;
+    }
+    .list-group-item{
+        padding: 3px;
+    }
+    .offset-1{
+        margin-left: 8%;
+    }
+    .filter{
+        display: block;
+        margin-left: 70%;
+        margin-top: 2%;
+    }
+    #sidebar{
+        display: none;
+    }
+    #mobile-filter{
+        padding: 10px;
+    }
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
