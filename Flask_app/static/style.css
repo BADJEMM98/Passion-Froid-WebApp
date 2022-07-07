@@ -44,6 +44,20 @@ svg {
     padding: 10px;
 }
 
+#app {
+  padding: 20px;
+}
+
+#preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#preview img {
+  max-width: 100%;
+  max-height: 500px;
+}
 /*
 *
 * ==========================================
@@ -86,13 +100,6 @@ svg {
     position: relative;
 }
 
-/*
-*
-* ==========================================
-* FOR DEMO PURPOSES
-* ==========================================
-*
-*/
 body {
     min-height: 100vh;
     background-color: #757f9a;
