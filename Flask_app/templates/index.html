@@ -1,4 +1,7 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='affichage.css') }}">
+{% endblock %}
 
 {% block passion_froid %}
     <div id="app">
@@ -11,28 +14,64 @@
         </form>
     </div>
 
-<!--    <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
-<!--        <div class="container-fluid">-->
-<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--                <span class="navbar-toggler-icon"></span>-->
-<!--            </button>-->
-<!--            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">-->
-<!--                <a class="navbar-brand" href="#">Passion Froid</a>-->
-<!--                <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
-<!--                    <li class="nav-item">-->
-<!--                      <a class="nav-link active" aria-current="page" href="#">Alimenter</a>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item">-->
-<!--                      <a class="nav-link" href="#">Acficher</a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--                <form class="d-flex">-->
-<!--                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                <button class="btn btn-outline-success" type="submit">Search</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
+    </head>
+    <body>
+    <section id="sidebar">
+        <div>
+            <h6 class="p-1 border-bottom">Tags</h6>
+            <select class="tags" size="8" multiple name="tags">
+                <!-- A rechercher les tag sur cognitive service -->
+                <option>Nourriture</option>
+                <option>Personne</option>
+                <option>Sport</option>
+            </select>
+        </div>
+        <div>
+            <h6 class="p-1 border-bottom">
+                Produit avec photo
+                <label class="switch">
+                    <input type="checkbox" name="type" id="produit">
+                    <span class="slider round"></span>
+                </label>
+            </h6>
+        </div>
+        <div>
+            <h6 class="p-1 border-bottom">
+                Produit avec humain
+                <label class="switch">
+                    <input type="checkbox" name="type" id="humain">
+                    <span class="slider round"></span>
+                </label>
+            </h6>
+        </div>
+        <div>
+            <h6 class="p-1 border-bottom">
+                Produit avec logo
+                <label class="switch">
+                    <input type="checkbox" name="type" id="logo">
+                    <span class="slider round"></span>
+                </label>
+            </h6>
+        </div>
+        <div>
+            <h6 class="p-1 border-bottom">Format</h6>
+            <form class="format">
+                <div class="selection-format">
+                    <input type="radio" name="type" id="selection-format-vertical">
+                    <label for="selection-format-vertical" class="format-vertical">Vertical</label>
+                </div>
+                <div class="selection-format">
+                    <input type="radio" name="type" id="selection-format-horizontal">
+                    <label for="selection-format-horizontal" class="format-horizontal">Horizontal</label>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section id="products">
+        <div class="container">
+
+        </div>
+    </section>
 
 
 {% endblock %}
