@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import errorcode
-import pymysql
 
 # server = 'your_server.database.windows.net'
 SQL_SERVER = 'passion-mysql-server.mysql.database.azure.com'

@@ -1,9 +1,5 @@
-azure-common
-azure-mgmt-sql
-azure-mgmt-rdbms
-azure-mgmt-resource
-azure-mgmt-compute
-pyodbc
-msrestazure
 mysql-connector-python
-pymysql
+Flask==2.1.0
+flask-cors
+azure-cognitiveservices-vision-computervision
+azure-storage-blob
