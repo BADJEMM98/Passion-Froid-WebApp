@@ -7,12 +7,16 @@ from flask_cors import CORS, cross_origin
 # from api.utils import AZURE_STORAGE_CONNECTION_STRING, connect_to_azure, allowed_file,analysis_image,save_image_in_container,save_image_in_mysql
 import mysql.connector
 from mysql.connector import errorcode
+import requests
+
+# from Flask_app.api.utils import allowed_file, analysis_image, save_image_in_container, save_image_in_mysql
 
 # server = 'your_server.database.windows.net'
 SQL_SERVER = 'passion-mysql-server.mysql.database.azure.com'
 SQL_DB = 'passiondb'
 USERNAME = 'passionadmin'
 PASSWORD = 'MonikMik17!'
+base_api= 'http://172.20.10.2:5000'
 #load_dotenv('./.flaskenv')
 
 app = Flask(__name__)
@@ -29,25 +33,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/')
 def hello():
     return render_template("base.html")
-@app.route('/getimages')
+@app.route('/getimages',methods= ['GET'])
 def getImages():
-    try:
-        cnxn = mysql.connector.connect(user=USERNAME, password=PASSWORD, host=SQL_SERVER, port=3306, database=SQL_DB)
-        print("Connection established")
-    except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with the user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
-        else:
-            print(err)
-    else:
-        cursor = cnxn.cursor()
-        cursor.execute("SELECT * FROM images")
-        rows = cursor.fetchall()
-
-    
-    return json.dumps(rows)
+    images = requests.get(base_api+'/getAll')
+    return jsonify(images)
 
 # @app.route('/uploadFile',  methods = ['POST'])
 # def uploadFile():
@@ -80,10 +69,6 @@ def getImages():
 #         resp = jsonify({'message' : 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
 #         resp.status_code = 400
 #         return resp
-
-# @app.route('/')
-# def hello_world():  # put application's code here
-#     return 'Hello World!'
 
 
 if __name__ == "__main__":

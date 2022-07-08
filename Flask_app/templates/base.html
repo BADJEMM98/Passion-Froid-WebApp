@@ -2,90 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Title</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='main.css')}}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='sidebar.css')}}"
+    />
+    <title>Document</title>
   </head>
   <body>
-    <div id="app">
-      <h1>Liste des images</h1>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>URL</th>
-            <th>tags</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(image, index) in images">
-            <td>%image[0]%</td>
-            <td v-if="editing[index] == false" @click="edit(index)">
-              %image[1]%
-            </td>
-            <td v-else>
-              <div class="flex-container">
-                <input type="text" v-model="image[1]" /><button
-                  @click="saveName(image, index)"
-                  class="save"
-                ></button>
-              </div>
-            </td>
-            <td>%image[2]%</td>
-            <td>
-              <span v-for="tag in images[3]"> %tag% </span>
-            </td>
-            <td>
-              <button
-                class="delete"
-                @click="deleteImage(image, index)"
-              ></button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="container">
+      <nav>
+        <a href="/homepage">Accueil</a>
+        <a href="/getimages">Lister les Images</a>
+        <a href="/search">Rechercher des Images</a>
+        <a href="/uploadimages">Ajouter des Images</a>
+      </nav>
+
+      <div class="container">
+        <section id="first">
+          <h1>First</h1>
+        </section>
+
+        <section id="second"></section>
+
+        <section id="third">
+          <h1>Third</h1>
+        </section>
+
+        <section id="fourth">
+          <h1>Fourth</h1>
+        </section>
+      </div>
+      <h1>Accueil</h1>
     </div>
   </body>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-  <script>
-    let app = new Vue({
-      el: "#app",
-      delimiters: ["%", "%"],
-      data: {
-        message: "test",
-        images: [],
-        editing: [],
-      },
-      mounted() {
-        console.log("mounted");
-        fetch("/getimages") // c'est ça get oki Images
-          .then((res) => res.json())
-          .then((images) => {
-            this.images = images;
-            this.images.forEach((image) => {
-              this.editing.push(false);
-            });
-          });
-      },
-      methods: {
-        edit(index) {
-          this.$set(this.editing, index, true);
-        },
-        saveName(image, index) {
-          console.log("Saving : ", image[0], "new name : ", image[1]); // ici faut faire appel à l'api por consommer l'API. POur la suppression je dois créer une autre fonction comme celle là <=? api/image/setName ... change en base de données le nom voilà quoi
-          this.$set(this.editing, index, false);
-        },
-        deleteImage(image, index) {
-          console.log("deleting :", image[0]); // delete via api = retiré de this.images(en supposant que tu refresh la liste après suppression)
-          // pour faire genre dans le front (quand ça sera fait dans l'api pas besoin) doudou j'ai oublié de rajouter une colonne pour lister les tags et évidemment c'est le plus compliqué car c'est le seul ou c'est une liste faut concaténer les labels des tags
-          this.$delete(this.images, index);
-          // si suppression OK ( l'api doit te répondre avec success : true ou false.)
-          // alors this.images = getImages (le truc dans mounted())
-          // sinon message d'erreur
-          // c'est ok ?
-        },
-      },
-    });
-  </script>
 </html>
