@@ -18,7 +18,7 @@ pip install -r requirements.txt
 Lancer la commande ci-dessous afin de lancer l'application
 
 ```
-cd Flask_py
+cd Flask_app
 flask run
 ```
 
@@ -26,3 +26,8 @@ flask run
 https://trello.com/b/212izcLn/modèle-kanban
 
 Vous retrouverez le lien trello avec la répartition des tâches à travers les membres de notre groupe.
+
+### Lien du support de présentation
+https://docs.google.com/presentation/d/1ho3OI7Ky6Am9v9uTHslZvNh9tHm3XvuJpJUpxZgXPJ4/edit#slide=id.gc6f9e470d_0_37
+
+Vous retrouverez une présentation du projet, puis les intefaces de l'application.
