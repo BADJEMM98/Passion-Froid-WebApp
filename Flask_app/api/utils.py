@@ -156,13 +156,7 @@ def save_tags(tags):
     print(tags_ids)
     print("Finished inserting row into tags")
 
-1 - enregistrer image dans blob 
-2 - récupérer l'url du blob
-3 - ajouter une ligne dans la table image
-4 - ajouter les tags qui n'existent pas dans la bdd
-5 - ajouter les associations tag images
-
-     def save_imagein_mysql(tags, url, name):
+def save_imagein_mysql(tags, url, name):
   cn  = connect_to_mysql()
   if cn:
     cursor = cn.cursor()
@@ -179,7 +173,7 @@ def save_tags(tags):
     list_image_tag = []
     for r in tags_ids:
       list_image_tag.append((last_image_id,r[0]))
-    image_tag_query = " insert into tag_image(id_image, id_tag) values (%s, %s) "
+    image_tag_query = """ insert into tag_image(id_image, id_tag) values (%s, %s) """
     try:
       cursor.executemany(image_tag_query, list_image_tag)
       cnxn.commit()
