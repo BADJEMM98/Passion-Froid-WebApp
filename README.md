@@ -18,8 +18,7 @@ pip install -r requirements.txt
 Lancer la commande ci-dessous afin de lancer l'application
 
 ```
-cd Flask_app
-flask run
+python Flask_app/app.py
 ```
 
 ### Lien trello
