@@ -194,21 +194,33 @@ def save_image_tags(last_image_id, tags):
     
     print("Done.")
 
+def deleteFile(id):
+  cn  = connect_to_mysql()
+  if cn:
+    cursor = cn.cursor()
+    query_0 = """select name from images where  id ={}""".format(id)
+    cursor.execute(query_0)
+    name = cursor.fetchone()[0]
 
-def deleteFile(name):
-  con_str = connect_to_azure()
-  print(con_str)
+    if name:
+      con_str = connect_to_azure()
+      # Create the BlobServiceClient object which will be used to create a container client
+      blob_service_client = BlobServiceClient.from_connection_string(con_str)
+      container_name = "passion-images" 
 
-  # Create the BlobServiceClient object which will be used to create a container client
-  blob_service_client = BlobServiceClient.from_connection_string(con_str)
-  container_name = "passion-images" 
-  container = blob_service_client.get_container_client(container_name)
-  
-  
-  blob_client = blob_service_client.get_blob_client(container=container_name, blob=name)
-  blob_client.delete()
-    
-  delete_mysql(name)
+      blob_client = blob_service_client.get_blob_client(container=container_name, blob=name)
+      if blob_client.exists():
+        blob_client.delete_blob()
+
+    query_1= """ DELETE from tag_image where id_image ={}""".format(id)
+    query_2= """ DELETE from images where id ={}""".format(id)
+
+    cursor.execute(query_1)
+    cursor.execute(query_2)
+    cn.commit()
+    cursor.close()
+    cn.close()
+    print("Done.")
   return
   
 
@@ -261,7 +273,18 @@ def get_all_images():
   print("Done.")
   return datas
 
-
+def update_file(data):
+  print(data)
+  cn  = connect_to_mysql()
+  if cn:
+    cursor = cn.cursor()
+    query = "UPDATE images SET name=%s where id=%s"
+    print(query)
+    cursor.execute(query, (data["new_name"],data["id"]))
+    cn.commit()
+    cursor.close()
+    cn.close()
+  return
 
 def get_images_by_tags(tags):
 
@@ -300,6 +323,7 @@ def get_images_by_tags(tags):
   cn.close()
   print("Done.")
   return datas
+
 
 
 """def get_images():

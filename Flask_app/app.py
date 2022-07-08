@@ -5,7 +5,7 @@ import json
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
-from api.utils import AZURE_STORAGE_CONNECTION_STRING, connect_to_azure,allowed_file,analysis_image,save_image_in_container,save_image_in_mysql,deleteFile,get_all_images,get_images_by_tags
+from api.utils import AZURE_STORAGE_CONNECTION_STRING,update_file,deleteFile,get_all_images,get_images_by_tags
 
 # from Flask_app.api.utils import allowed_file, analysis_image, save_image_in_container, save_image_in_mysql
 
@@ -14,7 +14,7 @@ SQL_SERVER = 'passion-mysql-server.mysql.database.azure.com'
 SQL_DB = 'passiondb'
 USERNAME = 'passionadmin'
 PASSWORD = 'MonikMik17!'
-base_api= 'http://172.20.10.2:5000'
+
 #load_dotenv('./.flaskenv')
 
 app = Flask(__name__)
@@ -50,37 +50,53 @@ def getImages():
 @app.route('/getAll',  methods = ['GET'])
 def get_all():
     d = get_all_images()
-    get_all_images
-    return jsonify({'message' : 'All images', "data": d})
+    print(d)
+    return render_template("liste_images.html", images={'message' : 'All images', "data": d})
+
+@app.route('/rechercher')
+def render_search_page():
+    return render_template("search.html")
 
 
-@app.route('/getByTags', methods = ['GET'])
+@app.route('/search', methods = ['GET'])
 def get_by_tags():
-     if 'tags' in request.args:
+    if 'tags' in request.args:
         tags = request.args['tags']
         print(tags)
         res = get_images_by_tags(tags)
         resp = jsonify({'message' : 'File successfully uploaded and analysis', "name": ""})
         resp.status_code = 201
-        return jsonify({'message' : 'All images', "data": res})
+        return render_template("search.html")
+    else:
+        return "Image not Found"
+
    
  
-@app.route('/deleteFile',  methods = ['DELETE'])
+@app.route('/deleteFile',  methods = ['POST','DELETE'])
 def delete_File():
-    request.args.get("name")
-    
-    if 'name' in request.args:
-        name = request.args['name']
-        deleteFile(name)
-        resp = jsonify({'message' : 'File successfully deleted', "name": name})
+    request.args.get("id")
+    if 'id' in request.args:
+        id = request.args['id']
+        deleteFile(id)
+        resp = jsonify({'message' : 'File successfully deleted', "id": id})
         resp.status_code = 201
         return resp
     else:
-        return "Erreur: Pas de nom fourni. Veuillez spécifier un le nom de l'image."       
+        resp = jsonify({'message' : 'No file selected for deleting'})
+        resp.status_code = 400
+        return resp
+
+@app.route('/updateFile',  methods = ['POST,PUT'])
+def update_name():
+    data = request.json
+    update_file(data)
+    resp = jsonify({'message' : 'File successfully updated', "data": data})
+    resp.status_code = 201
+    return resp       
 # @app.route('/')
 # def hello_world():  # put application's code here
 #     return 'Hello World!'
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',debug=True)

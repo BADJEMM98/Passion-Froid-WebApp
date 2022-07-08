@@ -20,20 +20,20 @@
         </thead>
         <tbody>
           <tr v-for="(image, index) in images">
-            <td>%image.id%</td>
+            <td>~image.id~</td>
             <td v-if="editing[index] == false" @click="edit(index)">
-              %image.name%
+              ~image.name~
             </td>
             <td v-else>
               <div class="flex-container">
-                <input type="text" v-model="image[1]" /><button
+                <input type="text" v-model="image.name" /><button
                   @click="saveName(image, index)"
                   class="save"
                 ></button>
               </div>
             </td>
-            <td>%image.tags%</td>
-            <td>%image.url%</td>
+            <td>~image.tags~</td>
+            <td>~image.url~</td>
             <td>
               <button
                 class="delete"
@@ -46,10 +46,15 @@
     </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <!-- <script>
+    let data_images = "{{images|tojson}}";
+    console.log(data_images);
+  </script> -->
   <script>
+    let data_images = '{{images|tojson}}';
     let app = new Vue({
       el: "#app",
-      delimiters: ["%", "%"],
+      delimiters: ["~", "~"],
       data: {
         message: "test",
         images: [],
@@ -57,27 +62,52 @@
       },
       mounted() {
         console.log("mounted");
-        fetch("/getimages") // c'est ça get oki Images
-          .then((res) => res.json())
-          .then((images) => {
-            this.images = images.data;
-            this.images.forEach((image) => {
-              this.editing.push(false);
-            });
-          });
+        this.images = JSON.parse(data_images).data;
+        this.images.forEach((image) => {
+             this.editing.push(false);});
+
+        console.log(this.images);
+        // fetch("/getAll") // c'est ça get oki Images
+        //   .then((res) => res.json())
+        //   .then((images) => {
+        //     //this.images = images.data;
+        //     console.log(images);
+            
+        //     //});
+        //   });
       },
       methods: {
         edit(index) {
           this.$set(this.editing, index, true);
         },
         saveName(image, index) {
-          console.log("Saving : ", image.id, "new name : ", image.name); // ici faut faire appel à l'api por consommer l'API. POur la suppression je dois créer une autre fonction comme celle là <=? api/image/setName ... change en base de données le nom voilà quoi
+          console.log("Saving : ", image.id, "new name : ", image.name);
+          const requestOptions = {
+            method: "POST",
+            body: JSON.stringify({ id: "image_ id", name: "image_ name" }),
+          };
+          fetch("/updateFile",requestOptions)
+          .then(resp => resp.json())
+          .then(reps => {
+            console.log("renaming :", image.id)
+          })
           this.$set(this.editing, index, false);
         },
         deleteImage(image, index) {
-          console.log("deleting :", image.id); // delete via api = retiré de this.images(en supposant que tu refresh la liste après suppression)
+          
+          fetch("/deleteFile", {
+            method:'POST',
+            body: JSON.stringify({name:"image_ name"})
+          })
+          .then(resp => reps.json())
+          .then(resp => {
+            console.log("deleting :", image.name);
+            this.$delete(this.images, index);
+          })
+          
+           // delete via api = retiré de this.images(en supposant que tu refresh la liste après suppression)
           // pour faire genre dans le front (quand ça sera fait dans l'api pas besoin) doudou j'ai oublié de rajouter une colonne pour lister les tags et évidemment c'est le plus compliqué car c'est le seul ou c'est une liste faut concaténer les labels des tags
-          this.$delete(this.images, index);
+          
           // si suppression OK ( l'api doit te répondre avec success : true ou false.)
           // alors this.images = getImages (le truc dans mounted())
           // sinon message d'erreur
