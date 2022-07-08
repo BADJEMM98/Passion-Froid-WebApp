@@ -1,3 +1,4 @@
+from email.mime import image
 import uuid
 import os
 import json
@@ -148,7 +149,7 @@ def save_tags(last_image_id,tags):
     print("ok")
 
     print(tag_list_tuples)
-    tag_query = """ insert ignore into tags(name) values(%s)"""
+    tag_query = " insert ignore into tags(name) values(%s)"
     try:
       cursor.executemany(tag_query, tag_list_tuples)
       cn.commit()
@@ -161,6 +162,7 @@ def save_tags(last_image_id,tags):
     print("Finished inserting row into tags")
     print(tags_ids)
     return 
+
 
 
 def save_image_tags(last_image_id, tags):

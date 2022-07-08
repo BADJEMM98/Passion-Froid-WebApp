@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block sidebarmenu %}
+<link rel="stylesheet" href="{{ url_for('static',filename='sidebar.css')}}" />
+<header class="header" role="banner">
+  <h1 class="logo">
+    <a href="#">Passion <span>Froid</span></a>
+  </h1>
+  <div class="nav-wrap">
+    <nav class="main-nav" role="navigation">
+      <ul class="unstyled list-hover-slide">
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#">Ajouter des Images</a></li>
+        <li><a href="#">Rechercher des Images</a></li>
+        <li><a href="#">Lister des Images</a></li>
+      </ul>
+    </nav>
+    <ul class="social-links list-inline unstyled list-hover-slide">
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Google+</a></li>
+      <li><a href="#">GitHub</a></li>
+      <li><a href="#">CodePen</a></li>
+    </ul>
+  </div>
+</header>
+{% endblock %}

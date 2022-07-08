@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    {% block passion_froid %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='sidebar.css')}}"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/homepage">Accueil</a>
+        <a href="/getimages">Lister les Images</a>
+        <a href="/search">Rechercher des Images</a>
+        <a href="/uploadimages">Ajouter des Images</a>
+      </nav>
 
-    {% endblock %}
+      <div class="container">
+        <section id="first">
+          <h1>First</h1>
+        </section>
 
-</body>
+        <section id="second"></section>
+
+        <section id="third">
+          <h1>Third</h1>
+        </section>
+
+        <section id="fourth">
+          <h1>Fourth</h1>
+        </section>
+      </div>
+      <h1>Accueil</h1>
+    </div>
+  </body>
 </html>
