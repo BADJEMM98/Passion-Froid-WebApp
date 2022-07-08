@@ -43,6 +43,7 @@ SQL_SERVER = 'passion-mysql-server.mysql.database.azure.com'
 SQL_DB = 'passiondb'
 MYSQL_USERNAME = 'passionadmin'
 MYSQL_PASSWORD = 'MonikMik17!'
+IMG_DOWNLOAD_LOCAL = os.path.abspath('downloads') + '/'
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -241,7 +242,6 @@ def delete_mysql(name):
   return
 
 
-
 def get_all_images():
   cn  = connect_to_mysql()
   if cn:
@@ -295,16 +295,16 @@ def get_images_by_tags(tags):
     cursor = cn.cursor()
     q = ("""
     select id_image, im.name, im.bloblink, GROUP_CONCAT(t.name) as tags_list 
-    from (  
+    from (
       (select * from tag_image)i_t 
       left join images as im
       on im.id = id_image
-      join  
+      join
       (select id, name from tags where name in {}) as t 
       on t.id = id_tag
       ) group by id_image,im.name, im.bloblink;
     """).format(tuple_tags)
-    
+
     print(q)
     cursor.execute(q)
     rows = cursor.fetchall()
