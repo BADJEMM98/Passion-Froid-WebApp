@@ -5,7 +5,7 @@ import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
-from api.utils import AZURE_STORAGE_CONNECTION_STRING, connect_to_azure, allowed_file,analysis_image,save_image_in_container,save_image_in_mysql
+from api.utils import AZURE_STORAGE_CONNECTION_STRING, connect_to_azure,allowed_file,analysis_image,save_image_in_container,save_image_in_mysql,deleteFile,get_all_images,get_images_by_tags
 
 #load_dotenv('./.flaskenv')
 
@@ -54,12 +54,43 @@ def uploadFile():
     else:
         resp = jsonify({'message' : 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
         resp.status_code = 400
-        return resp
+        return res
+        
+    
+@app.route('/getAll',  methods = ['GET'])
+def get_all():
+    d = get_all_images()
+    get_all_images
+    return jsonify({'message' : 'All images', "data": d})
 
+
+@app.route('/getByTags', methods = ['GET'])
+def get_by_tags():
+     if 'tags' in request.args:
+        tags = request.args['tags']
+        print(tags)
+        res = get_images_by_tags(tags)
+        resp = jsonify({'message' : 'File successfully uploaded and analysis', "name": ""})
+        resp.status_code = 201
+        return jsonify({'message' : 'All images', "data": res})
+   
+ 
+@app.route('/deleteFile',  methods = ['DELETE'])
+def delete_File():
+    request.args.get("name")
+    
+    if 'name' in request.args:
+        name = request.args['name']
+        deleteFile(name)
+        resp = jsonify({'message' : 'File successfully deleted', "name": name})
+        resp.status_code = 201
+        return resp
+    else:
+        return "Erreur: Pas de nom fourni. Veuillez spécifier un le nom de l'image."       
 # @app.route('/')
 # def hello_world():  # put application's code here
 #     return 'Hello World!'
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0')

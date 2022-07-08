@@ -23,17 +23,18 @@ else:
 
     #Création de la table Images
     # cursor.execute("CREATE TABLE images (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(50), bloblink VARCHAR(100) );")
-    # cursor.execute("CREATE TABLE tags (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(50) );")
+    # cursor.execute("CREATE TABLE tags (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(50) UNIQUE);")
     # cursor.execute("CREATE TABLE tag_image (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR(50) );")
     #cursor.execute("INSERT INTO images (name,bloblink) VALUES ('manguier.jpeg','www/tmp/blob1');")
     #print("Finished inserting row.")
-
-    cursor.execute("SELECT * FROM tags;")
+    
+    #cursor.execute("SELECT * FROM tags;")
+    
+    #cursor.execute("ALTER TABLE tags ADD CONSTRAINT unikname UNIQUE (name);")
     rows = cursor.fetchall()
     for row in rows:
-        #print("Data row = (%s, %s, %s)" %(str(row[0]), str(row[1]), str(row[2])))
-        print("Data row = (%s)"  %str(row[1]))
-
+      print(row)
+       
     # Cleanup
     cnxn.commit()
     cursor.close()
