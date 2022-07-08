@@ -15,7 +15,6 @@
           <a href="/search" class="search_icon" @click="search()"><i class="fas fa-search"></i></a>
         </div>
       </div>
-      <p>%tags%</p>
     </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
@@ -30,7 +29,16 @@
       methods: {
 
         search() {
+          let list_tags = split(this.tags," ")
+          const requestOptions = {
+            method: "GET",
+          };
+          fetch("/search?tags="+list_tags.toString(),requestOptions)
+          .then(resp => resp.json())
+          .then(resp => {
             console.log(this.tags)
+          })
+           
           }
         }
       }

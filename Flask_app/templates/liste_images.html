@@ -83,25 +83,28 @@
         saveName(image, index) {
           console.log("Saving : ", image.id, "new name : ", image.name);
           const requestOptions = {
-            method: "POST",
-            body: JSON.stringify({ id: "image_ id", name: "image_ name" }),
+            method: "PUT",
+            headers: {
+                  'content-type': 'application/json',
+                  'Accept': 'application/json'
+                },
+            body: JSON.stringify({ id: image.id, new_name: image.name }),
           };
           fetch("/updateFile",requestOptions)
           .then(resp => resp.json())
-          .then(reps => {
+          .then(resp => {
             console.log("renaming :", image.id)
           })
           this.$set(this.editing, index, false);
         },
         deleteImage(image, index) {
           
-          fetch("/deleteFile", {
-            method:'POST',
-            body: JSON.stringify({name:"image_ name"})
+          fetch("/deleteFile?id="+image.id.toString(), {
+            method:'DELETE'
           })
-          .then(resp => reps.json())
+          .then(resp => resp.json())
           .then(resp => {
-            console.log("deleting :", image.name);
+            console.log("deleting :", image.id);
             this.$delete(this.images, index);
           })
           

@@ -1,19 +1,11 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-# server = 'your_server.database.windows.net'
 SQL_SERVER = 'passion-mysql-server.mysql.database.azure.com'
 SQL_DB = 'passiondb'
 USERNAME = 'passionadmin'
 PASSWORD = 'MonikMik17!'
 list_tags = ('arbre','mangue')
-
-
-# recherche1 = "SELECT id_tag FROM tag_image INNER JOIN tags ON id = id_tag WHERE name =" + str(tag)+";"
-# recherche = "SELECT * FROM images as im INNER JOIN tag_image as ti ON im.id = ti.id_image INNER \
-#             JOIN tags t ON t.id = ti.id_tag WHERE t.id IN " + str(list_tags)+ " GROUP BY im.id,im.name HAVING COUNT(*)="+str(len(list_tags)) + ";"
-# recherche = "SELECT A.id_image FROM tag_image A INNER JOIN (SELECT id FROM tags \
-#             WHERE name IN " + str(list_tags) + "GROUP BY id HAVING COUNT(*) = "+ str(len(list_tags)) + ") AS B ON A.id_tag = B.id"
 
 recherche = "SELECT images.bloblink from images INNER JOIN ( SELECT A.id_image FROM tag_image A INNER JOIN \
             ( SELECT id FROM tags WHERE name IN"+ str(list_tags)+") AS B ON A.id_tag = B.id GROUP BY A.id_image \
@@ -54,6 +46,7 @@ else:
     # cursor.execute("")
     # cursor.execute("SELECT * FROM tags;")
     # cursor.execute("SELECT DISTINCT id_image, id_tag FROM tag_image WHERE id_tag=5")
+
     cursor.execute(recherche)
     rows = cursor.fetchall()
     for row in rows:

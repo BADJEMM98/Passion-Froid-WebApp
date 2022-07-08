@@ -326,14 +326,4 @@ def get_images_by_tags(tags):
 
 
 
-"""def get_images():
-  cursor.execute("SELECT * FROM images;")
-  rows = cursor.fetchall()
-  for row in rows:
-    print("Data row = (%s, %s, %s)" %(str(row[0]), str(row[1]), str(row[2])))
-
-"""
-
-
-
  

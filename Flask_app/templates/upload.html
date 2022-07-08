@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <h1 class="display-4">Image uploader</h1>
+    <p class="lead mb-0">select to upload</p>
+    <img src="https://bootstrapious.com/i/snippets/sn-img-upload/image.svg" alt="" width="150" class="mb-4">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  </head>
+  <body>
+
+    <div id="app">
+      <input ref="file" @change="onFileChange( $event )" type="file" />
+      <div class="image-area mt-4" id="preview">
+        <img v-if="url" :src="url"  class="img-fluid rounded shadow-sm mx-auto d-block"/>
+      </div>
+    </div>
+    </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        const vm = new Vue({
+          el: '#app',
+          data() {
+            return {
+              url: null,
+            }
+          },
+          methods: {
+            onFileChange(e) {
+                const file = e.target.files[0];
+                this.url = URL.createObjectURL(file);
+                var data = new FormData()
+                data.append('file', file)
+
+                fetch('/uploadFile', {
+                method: 'POST',
+                body: data
+                })
+            }
+          }
+        })
+
+    </script>
+</html>
