@@ -2,7 +2,7 @@ from email.mime import image
 import uuid
 import os
 import json
-
+import requests
 from azure.storage.blob import BlobServiceClient, BlobClient, ContentSettings, ContainerClient
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from msrest.authentication import CognitiveServicesCredentials
@@ -34,6 +34,7 @@ AZURE_ACCOUNT_INFOS = {
 
 AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=storageaccountazure94;AccountKey=NuqrL/XWJsaxgZ/b8BzngxQGGKhuOQvzCLDJSDgNl3T3l7/kXv7ZcKpEau9ZaoQlfWthh3QCIdMc+AStDdb8bw==;EndpointSuffix=core.windows.net"
 AZURE_STORAGE_ACCOUNT_NAME = "storageaccountazure94"
+AZURE_STORAGE_ACCOUNT_KEY= "NuqrL/XWJsaxgZ/b8BzngxQGGKhuOQvzCLDJSDgNl3T3l7/kXv7ZcKpEau9ZaoQlfWthh3QCIdMc+AStDdb8bw=="
 COG_KEY = '956e9fd75a8849c38215648054e55832'
 COG_ENDPOPINT= 'https://res-comp-viz.cognitiveservices.azure.com/'
 IMG_FOLDERS_LOCAL = os.path.abspath('uploads') + '/'
@@ -131,18 +132,22 @@ def save_image_in_mysql(tags, url, name):
     cursor.close()
     cn.close()
     print(last_image_id)
-    save_tags(tags)
+    tags_ids = save_tags(last_image_id,tags)
+
+  
     return last_image_id
     #insert tags
 
 
-def save_tags(tags):
+def save_tags(last_image_id,tags):
   print(tags)
   cn  = connect_to_mysql()
   if cn:
     cursor = cn.cursor()
-    tag_list_tuples = [(x) for x in tags]
+    tag_list_tuples = [tuple(s for s in i.split(',')) for i in tags]
     tags_ids = []
+    print("ok")
+
     print(tag_list_tuples)
     tag_query = " insert ignore into tags(name) values(%s)"
     try:
@@ -150,42 +155,152 @@ def save_tags(tags):
       cn.commit()
     except:
       cn.rollback()
-    tags_tuples = tuple(tags)
-    cursor.execute("SELECT id from tags where name in"+ str(tags_tuples))
-    tags_ids = cursor.fetchall()
-    print(tags_ids)
+    
+    cursor.close()
+    cn.close()
+    save_image_tags(last_image_id, tags)
     print("Finished inserting row into tags")
+    print(tags_ids)
+    return 
 
-def save_imagein_mysql(tags, url, name):
+
+
+def save_image_tags(last_image_id, tags):
   cn  = connect_to_mysql()
   if cn:
     cursor = cn.cursor()
-    #insert file
-    img_query = "INSERT INTO images (name,bloblink) VALUES(%s,%s);"
-    cursor.execute(img_query, (name,url))
-    
-    cursor.execute("SELECT LAST_INSERT_ID() from images")
-    last_image_id = cursor.fetchall()[0][0]
-    print("Finished inserting row into images.")
-    return last_image_id
-
+    tags_tuples = tuple(tags)
+    print(tags_tuples)
+    cursor.execute("SELECT id from tags where name in"+ str(tags_tuples))
+    tags_ids = cursor.fetchall()
+    cn.commit()
+    cursor.close()
+    print(tags_ids)
+    cursor = cn.cursor()
     #insert into asso table
     list_image_tag = []
     for r in tags_ids:
-      list_image_tag.append((last_image_id,r[0]))
+      list_image_tag.append((str(last_image_id),str(r[0])))
+    print("list_image_tag")
+    print(list_image_tag)
     image_tag_query = """ insert into tag_image(id_image, id_tag) values (%s, %s) """
     try:
       cursor.executemany(image_tag_query, list_image_tag)
-      cnxn.commit()
+      cn.commit()
     except:
-      cnxn.rollback()
+      cn.rollback()
     print("Finished inserting row into tag_image")
-
     # Cleanup
-    cnxn.commit()
-    cursor.close()
-    cnxn.close()
+    
     print("Done.")
+
+
+def deleteFile(name):
+  con_str = connect_to_azure()
+  print(con_str)
+
+  # Create the BlobServiceClient object which will be used to create a container client
+  blob_service_client = BlobServiceClient.from_connection_string(con_str)
+  container_name = "passion-images" 
+  container = blob_service_client.get_container_client(container_name)
+  
+  
+  blob_client = blob_service_client.get_blob_client(container=container_name, blob=name)
+  blob_client.delete()
+    
+  delete_mysql(name)
+  return
+  
+
+def delete_mysql(name):
+  cn  = connect_to_mysql()
+  if cn:
+    cursor = cn.cursor()
+    query = """ 
+            DELETE tag_images from tag_image 
+            left join images 
+            on images.id = tag_image.id_image
+            where images.name=name = 
+            """
+    cn.commit()
+    cursor.close()
+    cn.close()
+    print("Done.")
+  return
+
+
+
+def get_all_images():
+  cn  = connect_to_mysql()
+  if cn:
+    cursor = cn.cursor()
+    query = """
+              select im.id,im.name,im.bloblink, GROUP_CONCAT(t.name) as tags_list 
+              from (
+                (select id, name, bloblink from images) as im 
+                left join tag_image 
+                on im.id = id_image 
+                left join (select id, name from tags) t 
+                on t.id = id_tag ) 
+                group by im.id,im.name,im.bloblink
+          """
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    datas = []
+    for row in rows:
+      r = {
+        "id": row[0],
+        "name": row[1],
+        "url": row[2],
+        "tags": row[3]
+      }
+      datas.append(r)
+  cn.commit()
+  cursor.close()
+  cn.close()
+  print("Done.")
+  return datas
+
+
+
+def get_images_by_tags(tags):
+
+  tuple_tags = tuple(map(str, tags.split(',')))
+  print(tuple_tags)
+  cn  = connect_to_mysql()
+  if cn:
+    cursor = cn.cursor()
+    q = ("""
+    select id_image, im.name, im.bloblink, GROUP_CONCAT(t.name) as tags_list 
+    from (  
+      (select * from tag_image)i_t 
+      left join images as im
+      on im.id = id_image
+      join  
+      (select id, name from tags where name in {}) as t 
+      on t.id = id_tag
+      ) group by id_image,im.name, im.bloblink;
+    """).format(tuple_tags)
+    
+    print(q)
+    cursor.execute(q)
+    rows = cursor.fetchall()
+    print(rows)
+    datas = []
+    for row in rows:
+      r = {
+        "id": row[0],
+        "name": row[1],
+        "url": row[2],
+        "tags": row[3]
+      }
+      datas.append(r)
+  cn.commit()
+  cursor.close()
+  cn.close()
+  print("Done.")
+  return datas
+
 
 """def get_images():
   cursor.execute("SELECT * FROM images;")
