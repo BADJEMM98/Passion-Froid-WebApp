@@ -10,8 +10,8 @@ pip install -r requirements.txt
 
 #### Adapter les variables à votre cloud Azure sur les fichiers suivants :
 1. [database.py](database.py)
-2. [app.py](Flask_py/app.py)
-3. [utils.py](Flask_py/api/utils.py)
+2. [app.py](Flask_app/app.py)
+3. [utils.py](Flask_app/api/utils.py)
 
 
 #### Lancer l'application
